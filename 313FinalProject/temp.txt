@@ -1,0 +1,100 @@
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthService {
+
+  constructor() {
+    this.seedAdmin();
+  }
+
+  // ----------------------
+  // Password Hashing
+  // ----------------------
+  async hashPassword(password: string): Promise<string> {
+    const enc = new TextEncoder();
+    const data = enc.encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  // ----------------------
+  // LocalStorage Helpers
+  // ----------------------
+  loadUsers(): any[] {
+    return JSON.parse(localStorage.getItem('users') || '[]');
+  }
+
+  saveUsers(users: any[]): void {
+    localStorage.setItem('users', JSON.stringify(users));
+  }
+
+  setCurrentUser(user: any): void {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+  }
+
+  getCurrentUser(): any {
+    return JSON.parse(localStorage.getItem('currentUser') || 'null');
+  }
+
+  logout(): void {
+    localStorage.removeItem('currentUser');
+  }
+
+  // ----------------------
+  // Seed ONE Admin Account
+  // ----------------------
+  async seedAdmin(): Promise<void> {
+    const users = this.loadUsers();
+    const adminExists = users.some(u => u.username === 'admin');
+
+    if (!adminExists) {
+      const adminPasswordHash = await this.hashPassword("AdminPassword123");
+      users.push({
+        username: "admin",
+        passwordHash: adminPasswordHash,
+        role: "admin"
+      });
+      this.saveUsers(users);
+    }
+  }
+
+  // ----------------------
+  // Register Customer Only
+  // ----------------------
+  async registerUser(username: string, password: string): Promise<void> {
+    if (!username || !password) throw new Error("Username and password required");
+
+    const users = this.loadUsers();
+    if (users.find(u => u.username === username)) {
+      throw new Error("Username already exists");
+    }
+
+    const pwHash = await this.hashPassword(password);
+    const user = { username, passwordHash: pwHash, role: "customer" };
+
+    users.push(user);
+    this.saveUsers(users);
+    this.setCurrentUser({ username, role: "customer" });
+  }
+
+  // ----------------------
+  // Login (Admin or Customer)
+  // ----------------------
+  async loginUser(username: string, password: string): Promise<string> {
+    if (!username || !password) throw new Error("Username and password required");
+
+    const users = this.loadUsers();
+    const user = users.find(u => u.username === username);
+    if (!user) throw new Error("User not found");
+
+    const pwHash = await this.hashPassword(password);
+    if (pwHash !== user.passwordHash) throw new Error("Incorrect password");
+
+    this.setCurrentUser({ username: user.username, role: user.role });
+
+    return user.role; // return role so component can redirect
+  }
+}
