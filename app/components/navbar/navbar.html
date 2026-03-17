@@ -1,0 +1,23 @@
+<nav class="navbar">
+  <div class="logo">TLC Pet Adoption</div>
+
+  <ul class="nav-links">
+    <!-- Visible when NOT logged in -->
+    <li *ngIf="!auth.isLoggedIn()"><a routerLink="/login">Login</a></li>
+    <li *ngIf="!auth.isLoggedIn()"><a routerLink="/register">Register</a></li>
+    <li *ngIf="!auth.isLoggedIn()"><a routerLink="/home">Home</a></li>
+
+    <!-- Visible when logged in as customer -->
+    <li *ngIf="auth.isCustomer()"><a routerLink="/customer-profile">My Profile</a></li>
+    <li *ngIf="auth.isCustomer()"><a routerLink="/customer">Home</a></li>
+
+    <!-- Visible when logged in as admin -->
+    <li *ngIf="auth.isAdmin()"><a routerLink="/admin-profile">Admin Panel</a></li>
+    <li *ngIf="auth.isAdmin()"><a routerLink="/admin">Home</a></li>
+
+    <!-- Visible when logged in (any role) -->
+    <li *ngIf="auth.isLoggedIn()">
+      <a (click)="logout()">Logout</a>
+    </li>
+  </ul>
+</nav>
