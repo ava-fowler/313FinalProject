@@ -1,0 +1,22 @@
+<div class="card">
+  <img class="card-img" [src]="animal.imageUrl" alt="{{ animal.name }}" />
+
+  <div class="card-body">
+    <h3 class="card-title">{{ animal.name }}</h3>
+    <p class="card-text">{{ animal.breed }}</p>
+    <p class="card-text">{{ animal.age }} years old</p>
+    <p class="card-text description">{{ animal.description }}</p>
+
+    <div class="actions">
+      <!-- Admin -->
+      <button *ngIf="role === 'admin'" class="btn btn-warning">Edit</button>
+      <button *ngIf="role === 'admin'" class="btn btn-danger">Delete</button>
+
+      <!-- Customer -->
+      <button *ngIf="role === 'customer'" class="btn btn-primary">Book Appointment</button>
+
+      <!-- Guest -->
+      <button *ngIf="role === 'guest'" class="btn btn-secondary">Login to Book</button>
+    </div>
+  </div>
+</div>

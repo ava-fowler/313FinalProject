@@ -1,0 +1,13 @@
+.profile-container {
+  padding: 40px;
+  text-align: center;
+}
+
+.placeholder-box {
+  margin: 20px auto;
+  padding: 20px;
+  width: 60%;
+  border: 2px dashed #ff69b4;
+  border-radius: 10px;
+  color: #555;
+}
