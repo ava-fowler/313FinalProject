@@ -1,1 +1,5 @@
-<p>animal-list works!</p>
+<section class="results">
+  @for (animal of animals; track $index) {
+    <app-animal-profile [animal]="animal"></app-animal-profile>
+  }
+</section>

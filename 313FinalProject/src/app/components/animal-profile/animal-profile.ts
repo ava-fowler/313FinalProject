@@ -1,11 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-animal-profile',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './animal-profile.html',
-  styleUrl: './animal-profile.css',
+  styleUrls: ['./animal-profile.css'],
 })
-export class AnimalProfile {
-
+export class AnimalProfileComponent {
+  @Input() animal: any;
+  @Input() role?: 'admin' | 'customer' | 'guest';
 }
