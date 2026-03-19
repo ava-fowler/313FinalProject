@@ -18,5 +18,11 @@ export const routes: Routes = [
     { path: 'admin-profile', component: AdminProfileComponent },
     { path: 'animal-list', component: AnimalListComponent },
     { path: 'home', component: HomeComponent },
-    { path: '', redirectTo: 'home', pathMatch: 'full'}
+    { path: 'animals/:id', loadComponent: () => import('./components/animal-detail/animal-detail')
+        .then(m => m.AnimalDetailComponent) 
+    },
+    { path: '', redirectTo: 'home', pathMatch: 'full'},
+    { path: 'book/:id', loadComponent: () => import('./components/book-appointment/book-appointment')
+      .then(m => m.BookAppointmentComponent)
+}
 ];

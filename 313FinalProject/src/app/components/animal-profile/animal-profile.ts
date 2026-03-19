@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -11,4 +11,10 @@ import { CommonModule } from '@angular/common';
 export class AnimalProfileComponent {
   @Input() animal: any;
   @Input() role?: 'admin' | 'customer' | 'guest';
+
+  @Output() selected = new EventEmitter<any>();
+
+  onSelect() {
+    this.selected.emit(this.animal);
+  }
 }

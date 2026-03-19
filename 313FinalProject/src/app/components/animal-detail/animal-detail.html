@@ -1,0 +1,40 @@
+<article *ngIf="animal">
+  <!-- IMAGE ON THE RIGHT -->
+  <img class="animal-photo" [src]="animal.imageUrl" alt="{{ animal.name }}" />
+
+  <!-- LEFT SIDE INFO -->
+  <section class="animal-description">
+    <h2 class="animal-heading">{{ animal.name }}</h2>
+    <p class="animal-subheading">{{ animal.breed }}</p>
+    <p class="animal-subheading">{{ animal.sex }}</p>
+  </section>
+
+  <section class="animal-features">
+    <h2 class="section-heading">About this animal</h2>
+    <ul>
+      <li>At shelter for: {{ animal.shelterDuration }}</li>
+      <li>Personality: {{ animal.personality }}</li>
+    </ul>
+  </section>
+
+  <section class="animal-description">
+    <h2 class="section-heading">Description</h2>
+    <p>{{ animal.description }}</p>
+  </section>
+
+  <div class="actions">
+    <!-- Guest -->
+    <button *ngIf="!isLoggedIn" class="btn btn-primary" [routerLink]="['/login']">
+      Login to Book
+    </button>
+
+    <!-- Customer -->
+    <button *ngIf="isCustomer" class="btn btn-primary" [routerLink]="['/book', animal.id]">
+      Book Appointment
+    </button>
+
+    <!-- Admin -->
+    <button *ngIf="isAdmin" class="btn btn-warning">Edit</button>
+    <button *ngIf="isAdmin" class="btn btn-danger">Delete</button>
+  </div>
+</article>
