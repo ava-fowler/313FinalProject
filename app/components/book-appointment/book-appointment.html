@@ -1,0 +1,13 @@
+<div class="booking-container">
+  <h2>Book Appointment</h2>
+
+  <p>You are booking an appointment for animal ID: {{ animalId }}</p>
+
+  <label>Date:</label>
+  <input type="date" [(ngModel)]="date" />
+
+  <label>Time:</label>
+  <input type="time" [(ngModel)]="time" [min]="officeHours.open" [max]="officeHours.close" />
+
+  <button class="btn btn-primary" (click)="book()">Confirm Appointment</button>
+</div>
