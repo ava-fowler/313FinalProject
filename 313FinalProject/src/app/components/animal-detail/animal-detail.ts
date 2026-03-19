@@ -1,19 +1,29 @@
 import { Component } from '@angular/core';
-import { AnimalProfileComponent } from '../animal-profile/animal-profile';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth'; // adjust path if needed
 
 @Component({
-  selector: 'app-animal-list',
+  selector: 'app-animal-detail',
   standalone: true,
-  imports: [CommonModule, AnimalProfileComponent],
-  templateUrl: './animal-list.html',
-  styleUrls: ['./animal-list.css'],
+  imports: [CommonModule, RouterLink],
+  templateUrl: './animal-detail.html',
+  styleUrls: ['./animal-detail.css'],
 })
-export class AnimalListComponent {
+export class AnimalDetailComponent {
+  animal: any;
 
-  constructor(private router: Router) {}
+  // Role flags
+  isLoggedIn = false;
+  isCustomer = false;
+  isAdmin = false;
 
+  constructor(private route: ActivatedRoute) {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.animal = this.animals.find(a => a.id === id);
+  }
+
+  // Temporary: same data as your list (later we move this to a service)
   animals = [
     {
       id: 1,
@@ -125,9 +135,6 @@ export class AnimalListComponent {
   shelterDuration: '4 months',
   imageUrl: 'https://placedog.net/500/400?id=3'
 }
-  ];
 
-  openAnimal(animal: any) {
-    this.router.navigate(['/animals', animal.id]);
-  }
+  ];
 }
