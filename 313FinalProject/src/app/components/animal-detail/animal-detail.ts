@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { AuthService } from '../../services/auth'; // adjust path if needed
+import { AuthService } from '../../services/auth'; 
 
 @Component({
   selector: 'app-animal-detail',
@@ -18,7 +18,13 @@ export class AnimalDetailComponent {
   isCustomer = false;
   isAdmin = false;
 
-  constructor(private route: ActivatedRoute) {
+  constructor(private route: ActivatedRoute, private auth: AuthService) {
+     // Load role flags from AuthService
+    this.isLoggedIn = this.auth.isLoggedIn();
+    this.isCustomer = this.auth.isCustomer();
+    this.isAdmin = this.auth.isAdmin();
+
+    // Load the selected animal
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.animal = this.animals.find(a => a.id === id);
   }

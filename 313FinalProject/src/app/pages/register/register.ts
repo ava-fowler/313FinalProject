@@ -10,14 +10,14 @@ import { Router } from '@angular/router';
   templateUrl: './register.html'
 })
 export class RegisterComponent {
-  username = '';
+  email = '';
   password = '';
 
   constructor(private auth: AuthService, private router: Router) {}
 
   async onSubmit() {
     try {
-      await this.auth.registerUser(this.username, this.password);
+      await this.auth.registerUser(this.email, this.password);
       alert("Registered and logged in");
       this.router.navigate(['/customer']);
     } catch (err: any) {
