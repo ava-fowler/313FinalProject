@@ -8,14 +8,8 @@
 
     <div class="actions">
       <!-- Admin -->
-      <button *ngIf="role === 'admin'" class="btn btn-warning">Edit</button>
-      <button *ngIf="role === 'admin'" class="btn btn-danger">Delete</button>
-
-      <!-- Customer -->
-      <button *ngIf="role === 'customer'" class="btn btn-primary">Book Appointment</button>
-
-      <!-- Guest -->
-      <button *ngIf="role === 'guest'" class="btn btn-secondary">Login to Book</button>
+      <button *ngIf="userRole === 'admin'" class="btn btn-warning">Edit</button>
+      <button *ngIf="userRole === 'admin'" class="btn btn-danger">Delete</button>
     </div>
   </div>
 </div>
