@@ -34,7 +34,7 @@ export class AnimalService {
   getAnimalById(id: string): Observable<Animal> {
     const animalDoc = doc(firebaseFirestore, `animals/${id}`);
     return from(getDoc(animalDoc)).pipe(
-      map(d => ({ id: d.id, ...d.data() } as Animal))
+      map(d => ({ id: d.id, ...(d.data() || {}) } as Animal))
     );
   }
 
