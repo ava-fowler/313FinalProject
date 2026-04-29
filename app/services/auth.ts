@@ -56,7 +56,7 @@ export class AuthService {
   async registerUser(email: string, username: string, password: string): Promise<void> {
     if (!email || !username || !password) throw new Error('Email, username, and password required');
 
-    const userCredential = await createUserWithEmailAndPassword(firebaseAuth, email, password, username);
+    const userCredential = await createUserWithEmailAndPassword(firebaseAuth, email, password);
     await updateProfile(userCredential.user, { displayName: username });
 
     const role: UserRole = email.toLowerCase() === this.ADMIN_EMAIL ? 'admin' : 'customer';
