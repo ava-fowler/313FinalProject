@@ -12,13 +12,14 @@ import { RouterModule } from '@angular/router';
 })
 export class RegisterComponent {
   email = '';
+  user = '';
   password = '';
 
   constructor(private auth: AuthService, private router: Router) {}
 
   async onSubmit() {
     try {
-      await this.auth.registerUser(this.email, this.password);
+      await this.auth.registerUser(this.email, this.user, this.password);
       alert("Registered and logged in");
       this.router.navigate(['/customer']);
     } catch (err: any) {

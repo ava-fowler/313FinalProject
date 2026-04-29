@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppointmentService } from '../../services/appointment';
+import { AnimalService } from '../../services/animal';
 
 @Component({
   selector: 'app-book-appointment',
@@ -11,8 +12,9 @@ import { AppointmentService } from '../../services/appointment';
   templateUrl: './book-appointment.html',
   styleUrls: ['./book-appointment.css'],
 })
-export class BookAppointmentComponent {
-  animalId!: number;
+export class BookAppointmentComponent implements OnInit {
+  animalId = '';
+  animalName = '';
   date = '';
   time = '';
 
@@ -24,9 +26,31 @@ export class BookAppointmentComponent {
   constructor(
     private route: ActivatedRoute,
     private appointmentService: AppointmentService,
-    private router: Router
+    private animalService: AnimalService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
-    this.animalId = Number(this.route.snapshot.paramMap.get('id'));
+    // constructor left intentionally light; initialization in ngOnInit
+  }
+
+  ngOnInit() {
+    const id = this.route.snapshot.paramMap.get('id') || '';
+    console.debug('BookAppointment: route id', id);
+    this.animalId = id;
+    if (id) {
+      this.animalService.getAnimalById(id).subscribe(
+        a => {
+          console.debug('BookAppointment: fetched animal', id, a);
+          this.animalName = a?.name || 'Unknown Animal';
+          this.cdr.detectChanges();
+        },
+        (err) => {
+          console.warn('BookAppointment: failed to fetch animal', id, err);
+          this.animalName = 'Unknown Animal';
+          this.cdr.detectChanges();
+        }
+      );
+    }
   }
 
   async book() {
@@ -76,9 +100,12 @@ export class BookAppointmentComponent {
     }
   }
 
-  try {
+    try {
+    const nameForSubmit = this.animalName || this.animalId;
+    console.debug('BookAppointment: creating appointment for', this.animalId, nameForSubmit);
     await this.appointmentService.createAppointment(
       this.animalId,
+      nameForSubmit,
       this.date,
       this.time
     );

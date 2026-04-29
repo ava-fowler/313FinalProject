@@ -1,7 +1,7 @@
 <div class="booking-container">
   <h2>Book Appointment</h2>
 
-  <p>You are booking an appointment for animal ID: {{ animalId }}</p>
+  <p>You are booking an appointment for {{ animalName || 'Unknown Animal' }}</p>
 
   <label>Date:</label>
   <input type="date" [(ngModel)]="date" />
