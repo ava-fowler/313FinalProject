@@ -9,7 +9,7 @@ const animals = [
     sex: 'Female',
     personality: 'Friendly and energetic, loves people and other dogs.',
     shelterDuration: '2 months',
-    imageUrl: 'https://placedog.net/500/400?id=3',
+    imageUrl: 'src/assets/images/golden retreiver.jpg',
   },
   {
     name: 'Milo',
@@ -18,7 +18,7 @@ const animals = [
     sex: 'Male',
     personality: 'Calm, affectionate, and loves naps in sunny spots.',
     shelterDuration: '3 weeks',
-    imageUrl: 'https://placedog.net/500/400?id=3',
+    imageUrl: 'src/assets/images/tabby.jpg',
   },
   {
     name: 'Luna',
@@ -27,7 +27,7 @@ const animals = [
     sex: 'Female',
     personality: 'Playful and talkative, enjoys long walks and cold weather.',
     shelterDuration: '1 month',
-    imageUrl: 'https://placedog.net/500/400?id=3',
+    imageUrl: 'src/assets/images/husky.jpg',
   },
   {
     name: 'Oliver',
@@ -36,7 +36,7 @@ const animals = [
     sex: 'Male',
     personality: 'Curious and adventurous, great with families.',
     shelterDuration: '2 weeks',
-    imageUrl: 'https://placedog.net/500/400?id=3',
+    imageUrl: 'src/assets/images/beagle.jpg',
   },
   {
     name: 'Daisy',
@@ -45,7 +45,7 @@ const animals = [
     sex: 'Female',
     personality: 'Short legs, big personality. Loves belly rubs.',
     shelterDuration: '1 month',
-    imageUrl: 'https://placedog.net/500/400?id=3',
+    imageUrl: 'src/assets/images/corgi.jpg',
   },
   {
     name: 'Rocky',
@@ -54,7 +54,7 @@ const animals = [
     sex: 'Male',
     personality: 'Smart and protective, great with training.',
     shelterDuration: '3 months',
-    imageUrl: 'https://placedog.net/500/400?id=3',
+    imageUrl: 'src/assets/images/german shepard.jpg',
   },
   {
     name: 'Willow',
@@ -63,16 +63,16 @@ const animals = [
     sex: 'Female',
     personality: 'Independent but affectionate once she trusts you.',
     shelterDuration: '2 weeks',
-    imageUrl: 'https://placedog.net/500/400?id=3',
+    imageUrl: 'src/assets/images/calico.jpg',
   },
   {
     name: 'Charlie',
-    breed: 'Labrador',
+    breed: 'Chocolate Labrador',
     age: 1,
     sex: 'Male',
     personality: 'Energetic puppy who loves everyone.',
     shelterDuration: '5 days',
-    imageUrl: 'https://placedog.net/500/400?id=3',
+    imageUrl: 'src/assets/images/chocolate lab.jpg',
   },
   {
     name: 'Hazel',
@@ -81,7 +81,7 @@ const animals = [
     sex: 'Female',
     personality: 'Very intelligent and active, needs mental stimulation.',
     shelterDuration: '1 month',
-    imageUrl: 'https://placedog.net/500/400?id=3',
+    imageUrl: 'src/assets/images/border collie.jpg',
   },
   {
     name: 'Finn',
@@ -90,7 +90,7 @@ const animals = [
     sex: 'Male',
     personality: 'Lazy king of naps. Loves sunbeams and treats.',
     shelterDuration: '4 months',
-    imageUrl: 'https://placedog.net/500/400?id=3',
+    imageUrl: 'src/assets/images/orange tabby.jpg',
   },
 ];
 

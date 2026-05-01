@@ -3,11 +3,14 @@
     <!-- LEFT SIDE INFO -->
     <div class="col-md-6">
       <h1 class="fw-bold">{{ animal.name }}</h1>
-      <p class="fs-5 text-muted">{{ animal.breed }}</p>
-      <p class="fs-5 text-muted">{{ animal.sex }}</p>
+      <!-- <p class="fs-5 text-muted">Breed: {{ animal.breed }}</p>
+      <p class="fs-5 text-muted">Sex: {{ animal.sex }}</p> -->
 
       <h4 class="mt-4">About this animal</h4>
       <ul class="list-unstyled">
+        <li><strong>Breed:</strong> {{ animal.breed }}</li>
+        <li><strong>Sex:</strong> {{ animal.sex }}</li>
+        <li><strong>Age:</strong> {{ animal.age }}</li>
         <li><strong>At shelter for:</strong> {{ animal.shelterDuration }}</li>
         <li><strong>Personality:</strong> {{ animal.personality }}</li>
       </ul>
@@ -31,7 +34,9 @@
 
     <!-- RIGHT SIDE IMAGE -->
     <div class="col-md-6">
-      <img [src]="animal.imageUrl" alt="{{ animal.name }}" class="img-fluid rounded shadow" />
+    <!-- @for (animal of ; track $index) {} -->
+        <img [src]="animal.imageUrl" alt="{{ animal.name }}" class="img-fluid rounded shadow" />
+      
     </div>
   </div>
 </div>
