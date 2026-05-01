@@ -14,8 +14,11 @@ export class AuthService {
   // ----------------------
   // Save user to localStorage
   // ----------------------
-  private storeUser(email: string, username: string, role: UserRole) {
-    const user = { email, username, role };
+  private storeUser(email: string, username: string, role: UserRole, password?: string) {
+    const user: any = { email, username, role };
+    if (password) {
+      user.password = password;
+    }
     localStorage.setItem('currentUser', JSON.stringify(user));
   }
 
@@ -60,7 +63,7 @@ export class AuthService {
     await updateProfile(userCredential.user, { displayName: username });
 
     const role: UserRole = email.toLowerCase() === this.ADMIN_EMAIL ? 'admin' : 'customer';
-    this.storeUser(email, username, role);
+    this.storeUser(email, username, role, password);
   }
 
   // ----------------------
@@ -73,7 +76,7 @@ export class AuthService {
 
     const role: UserRole = email.toLowerCase() === this.ADMIN_EMAIL ? 'admin' : 'customer';
     const username = this.getCurrentUser()?.username ?? credential.user.displayName ?? credential.user.email ?? email;
-    this.storeUser(email, username, role);
+    this.storeUser(email, username, role, password);
 
     return role;
   }
@@ -88,9 +91,10 @@ export class AuthService {
 
     await updateProfile(current, { displayName: newUsername });
 
-    // preserve role if present
-    const role: UserRole = this.getCurrentUser()?.role ?? (current.email?.toLowerCase() === this.ADMIN_EMAIL ? 'admin' : 'customer');
-    this.storeUser(current.email ?? '', newUsername, role);
+    // preserve role and password if present
+    const currentUser = this.getCurrentUser();
+    const role: UserRole = currentUser?.role ?? (current.email?.toLowerCase() === this.ADMIN_EMAIL ? 'admin' : 'customer');
+    this.storeUser(current.email ?? '', newUsername, role, currentUser?.password);
   }
 
   // ----------------------
@@ -103,6 +107,10 @@ export class AuthService {
 
     try {
       await fbUpdatePassword(current, newPassword);
+      // Update localStorage with new password
+      const currentUser = this.getCurrentUser();
+      const role: UserRole = currentUser?.role ?? (current.email?.toLowerCase() === this.ADMIN_EMAIL ? 'admin' : 'customer');
+      this.storeUser(current.email ?? '', currentUser?.username ?? current.email ?? '', role, newPassword);
     } catch (err: any) {
       // Firebase may require recent login; surface a helpful message
       if (err?.code === 'auth/requires-recent-login') {

@@ -46,7 +46,7 @@
       <div class="info-row">
         <label>Password:</label>
         <div class="password-row">
-          <span class="password-display">{{ showPassword ? 'password123' : '••••••••' }}</span>
+          <span class="password-display">{{ getPasswordDisplay() }}</span>
           <button class="btn btn-sm btn-outline-secondary" (click)="togglePasswordVisibility()" title="Toggle password visibility">
             {{ showPassword ? '👁️' : '👁️‍🗨️' }}
           </button>

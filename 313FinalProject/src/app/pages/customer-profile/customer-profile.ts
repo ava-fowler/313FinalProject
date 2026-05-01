@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth';
@@ -27,6 +27,7 @@ interface Appointment {
 export class CustomerProfileComponent implements OnInit {
   userEmail = '';
   username = '';
+  currentPassword = '';
   newUsername = '';
   newPassword = '';
   confirmPassword = '';
@@ -47,7 +48,8 @@ export class CustomerProfileComponent implements OnInit {
   constructor(
     private auth: AuthService,
     private appointmentService: AppointmentService,
-    private animalService: AnimalService
+    private animalService: AnimalService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -61,6 +63,7 @@ export class CustomerProfileComponent implements OnInit {
     if (user) {
       this.userEmail = user.email || '';
       this.username = user.username || '';
+      this.currentPassword = user.password || '';
     }
   }
 
@@ -103,6 +106,7 @@ export class CustomerProfileComponent implements OnInit {
       this.username = this.newUsername;
       this.newUsername = '';
       this.showChangeUsername = false;
+      this.cdr.detectChanges();
       this.successMessage = 'Username updated successfully';
       setTimeout(() => this.successMessage = '', 3000);
     } catch (err: any) {
@@ -111,6 +115,7 @@ export class CustomerProfileComponent implements OnInit {
       setTimeout(() => this.errorMessage = '', 4000);
     } finally {
       this.isUpdatingUsername = false;
+      this.cdr.detectChanges();
     }
   }
 
@@ -127,9 +132,11 @@ export class CustomerProfileComponent implements OnInit {
     this.isUpdatingPassword = true;
     try {
       await this.auth.updatePassword(this.newPassword);
+      this.currentPassword = this.newPassword;
       this.newPassword = '';
       this.confirmPassword = '';
       this.showChangePassword = false;
+      this.cdr.detectChanges();
       this.successMessage = 'Password updated successfully';
       setTimeout(() => this.successMessage = '', 3000);
     } catch (err: any) {
@@ -138,6 +145,7 @@ export class CustomerProfileComponent implements OnInit {
       setTimeout(() => this.errorMessage = '', 4000);
     } finally {
       this.isUpdatingPassword = false;
+      this.cdr.detectChanges();
     }
   }
 
@@ -161,7 +169,7 @@ export class CustomerProfileComponent implements OnInit {
   }
 
   getPasswordDisplay(): string {
-    return this.showPassword ? '••••••••' : '••••••••';
+    return this.showPassword ? this.currentPassword : '••••••••';
   }
 
   toggleFavorite(animalId: string | undefined) {
