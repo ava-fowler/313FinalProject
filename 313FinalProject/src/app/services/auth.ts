@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, updatePassword as fbUpdatePassword } from 'firebase/auth';
 import { firebaseAuth } from '../firebase';
 
 export type UserRole = 'admin' | 'customer';
@@ -14,8 +14,8 @@ export class AuthService {
   // ----------------------
   // Save user to localStorage
   // ----------------------
-  private storeUser(email: string, role: UserRole) {
-    const user = { email, role };
+  private storeUser(email: string, username: string, role: UserRole) {
+    const user = { email, username, role };
     localStorage.setItem('currentUser', JSON.stringify(user));
   }
 
@@ -53,13 +53,14 @@ export class AuthService {
   // ----------------------
   // Register (Firebase)
   // ----------------------
-  async registerUser(email: string, password: string): Promise<void> {
-    if (!email || !password) throw new Error('Email and password required');
+  async registerUser(email: string, username: string, password: string): Promise<void> {
+    if (!email || !username || !password) throw new Error('Email, username, and password required');
 
-    await createUserWithEmailAndPassword(firebaseAuth, email, password);
+    const userCredential = await createUserWithEmailAndPassword(firebaseAuth, email, password);
+    await updateProfile(userCredential.user, { displayName: username });
 
     const role: UserRole = email.toLowerCase() === this.ADMIN_EMAIL ? 'admin' : 'customer';
-    this.storeUser(email, role);
+    this.storeUser(email, username, role);
   }
 
   // ----------------------
@@ -68,11 +69,46 @@ export class AuthService {
   async loginUser(email: string, password: string): Promise<UserRole> {
     if (!email || !password) throw new Error('Email and password required');
 
-    await signInWithEmailAndPassword(firebaseAuth, email, password);
+    const credential = await signInWithEmailAndPassword(firebaseAuth, email, password);
 
     const role: UserRole = email.toLowerCase() === this.ADMIN_EMAIL ? 'admin' : 'customer';
-    this.storeUser(email, role);
+    const username = this.getCurrentUser()?.username ?? credential.user.displayName ?? credential.user.email ?? email;
+    this.storeUser(email, username, role);
 
     return role;
+  }
+
+  // ----------------------
+  // Update username (Firebase + localStorage)
+  // ----------------------
+  async updateUsername(newUsername: string): Promise<void> {
+    if (!newUsername) throw new Error('Username cannot be empty');
+    const current = firebaseAuth.currentUser;
+    if (!current) throw new Error('No authenticated user');
+
+    await updateProfile(current, { displayName: newUsername });
+
+    // preserve role if present
+    const role: UserRole = this.getCurrentUser()?.role ?? (current.email?.toLowerCase() === this.ADMIN_EMAIL ? 'admin' : 'customer');
+    this.storeUser(current.email ?? '', newUsername, role);
+  }
+
+  // ----------------------
+  // Update password (Firebase)
+  // ----------------------
+  async updatePassword(newPassword: string): Promise<void> {
+    if (!newPassword) throw new Error('Password cannot be empty');
+    const current = firebaseAuth.currentUser;
+    if (!current) throw new Error('No authenticated user');
+
+    try {
+      await fbUpdatePassword(current, newPassword);
+    } catch (err: any) {
+      // Firebase may require recent login; surface a helpful message
+      if (err?.code === 'auth/requires-recent-login') {
+        throw new Error('Please sign in again and retry updating your password.');
+      }
+      throw new Error(err?.message || 'Failed to update password');
+    }
   }
 }

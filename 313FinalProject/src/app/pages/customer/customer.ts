@@ -13,12 +13,14 @@ import { CommonModule } from '@angular/common';
 })
 export class CustomerComponent implements OnInit {
   userEmail = '';
+  username = '';
 
   constructor(private auth: AuthService, private router: Router) {}
 
   ngOnInit() {
     const user = this.auth.getCurrentUser();
     this.userEmail = user?.email ?? 'customer';
+    this.username = user?.username?? 'username';
   }
 
   logout(): void {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,13 +11,12 @@ import { AnimalService } from '../../services/animal';
   imports: [CommonModule, FormsModule],
   templateUrl: './book-appointment.html',
 })
-export class BookAppointmentComponent {
-  animalId: string = '';
-  animalName: string = '';
-
-  name: string = '';
-  date: string = '';
-  time: string = '';
+export class BookAppointmentComponent implements OnInit {
+  animalId = '';
+  animalName = '';
+  name = '';
+  date = '';
+  time = '';
 
   officeHours = {
     open: '09:00',
@@ -34,13 +33,27 @@ export class BookAppointmentComponent {
     private router: Router,
     private appointmentService: AppointmentService,
     private animalService: AnimalService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
-    this.animalId = this.route.snapshot.paramMap.get('id') || '';
-    this.animalService.getAnimalById(this.animalId).subscribe((animal) => {
-      this.animalName = animal.name;
-    });
+    const id = this.route.snapshot.paramMap.get('id') || '';
+    console.debug('BookAppointment: route id', id);
+    this.animalId = id;
+    if (id) {
+      this.animalService.getAnimalById(id).subscribe({
+        next: (a) => {
+          console.debug('BookAppointment: fetched animal', id, a);
+          this.animalName = a?.name || 'Unknown Animal';
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.warn('BookAppointment: failed to fetch animal', id, err);
+          this.animalName = 'Unknown Animal';
+          this.cdr.detectChanges();
+        },
+      });
+    }
   }
 
   private formatDateDisplay(isoDate: string): string {
@@ -69,10 +82,9 @@ export class BookAppointmentComponent {
     }
 
     try {
-      // Pass animalId as string (not Number), and include animalName
       await this.appointmentService.createAppointment(
-        this.animalId, // Keep as string
-        this.animalName, // Pass the animal's name
+        this.animalId,
+        this.animalName || this.animalId,
         customerName,
         this.date,
         this.time,

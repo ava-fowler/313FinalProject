@@ -2,10 +2,14 @@
   <h2>Book Appointment</h2>
   <p class="text-muted" *ngIf="animalName">For: <strong>{{ animalName }}</strong></p>
 
+<<<<<<< HEAD
   <div class="form-group mb-3">
     <label>Name</label>
     <input type="text" class="form-control" [(ngModel)]="name" name="name" required />
   </div>
+=======
+  <p>You are booking an appointment for {{ animalName || 'Unknown Animal' }}</p>
+>>>>>>> 0bd574417f3d2ffe8c9decdb04b067f4df74f4dc
 
   <div class="form-group mb-3">
     <label>Date</label>

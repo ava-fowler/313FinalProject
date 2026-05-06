@@ -1,5 +1,10 @@
 <div class="card h-100 shadow-sm" style="cursor: pointer" (click)="onSelect()">
-  <img class="card-img-top" [src]="animal.imageUrl" alt="{{ animal.name }}" />
+  <div class="card-img-container">
+    <img *ngIf="animal.imageUrl" class="card-img-top" [src]="animal.imageUrl" alt="{{ animal.name }}" />
+    <div *ngIf="!animal.imageUrl" class="card-img-top card-img-placeholder">
+      <span>No Image</span>
+    </div>
+  </div>
 
   <div class="card-body">
     <h3 class="card-title fw-bold">{{ animal.name }}</h3>

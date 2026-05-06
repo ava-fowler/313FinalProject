@@ -9,6 +9,8 @@ import {
   onSnapshot,
   query,
   orderBy,
+  where,
+  getDocs,
 } from 'firebase/firestore';
 import { firebaseFirestore } from '../firebase';
 import { AuthService } from './auth';
@@ -16,13 +18,13 @@ import { Observable, BehaviorSubject } from 'rxjs';
 
 export interface Appointment {
   id?: string;
-  animalId: string; // Changed to string to match Firestore IDs
-  animalName: string; // NEW: Store the animal's name
+  animalId: string;
+  animalName: string;
   customerEmail: string;
   customerName?: string;
   date: string;
   time: string;
-  status: 'pending' | 'approved' | 'rejected';
+  status: 'pending' | 'approved' | 'rejected' | 'cancelled';
   notes?: string;
   createdAt?: any;
 }
@@ -43,7 +45,6 @@ export class AppointmentService {
     });
   }
 
-  // UPDATED: Accept animalId as string and add animalName
   async createAppointment(
     animalId: string,
     animalName: string,
@@ -55,8 +56,8 @@ export class AppointmentService {
     if (!user) throw new Error('User must be logged in to book an appointment');
 
     return addDoc(this.appointmentsCollection, {
-      animalId, // Now saved as string (no NaN)
-      animalName, // NEW: Saves the animal's name
+      animalId,
+      animalName,
       customerName,
       customerEmail: user.email,
       date,
@@ -78,9 +79,20 @@ export class AppointmentService {
     return this.appointments$;
   }
 
+  async getAppointmentsByEmail(email: string): Promise<Appointment[]> {
+    const q = query(this.appointmentsCollection, where('customerEmail', '==', email));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }) as Appointment);
+  }
+
   async updateStatus(id: string, status: 'approved' | 'rejected'): Promise<void> {
     const appDoc = doc(firebaseFirestore, `appointments/${id}`);
     await updateDoc(appDoc, { status });
+  }
+
+  async cancelAppointment(appointmentId: string): Promise<void> {
+    const apptDoc = doc(firebaseFirestore, `appointments/${appointmentId}`);
+    await updateDoc(apptDoc, { status: 'cancelled' });
   }
 
   async deleteAppointment(id: string): Promise<void> {
