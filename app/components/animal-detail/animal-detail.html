@@ -14,7 +14,16 @@
         <li><strong>At shelter for:</strong> {{ animal.shelterDuration }}</li>
         <li><strong>Personality:</strong> {{ animal.personality }}</li>
       </ul>
-
+      <!-- Logged-in customers can favorite -->
+      <button
+        *ngIf="isCustomer"
+        class="btn"
+        [class.btn-outline-danger]="!isFavorited"
+        [class.btn-danger]="isFavorited"
+        (click)="toggleFavorite()"
+      >
+        {{ isFavorited ? '♥ Unfavorite' : '♡ Favorite' }}
+      </button>
       <div class="mt-4 d-flex gap-2">
         <!-- Guest -->
         <button *ngIf="!isLoggedIn" class="btn btn-primary" [routerLink]="['/login']">
@@ -34,9 +43,8 @@
 
     <!-- RIGHT SIDE IMAGE -->
     <div class="col-md-6">
-    <!-- @for (animal of ; track $index) {} -->
-        <img [src]="animal.imageUrl" alt="{{ animal.name }}" class="img-fluid rounded shadow" />
-      
+      <!-- @for (animal of ; track $index) {} -->
+      <img [src]="animal.imageUrl" alt="{{ animal.name }}" class="img-fluid rounded shadow" />
     </div>
   </div>
 </div>
