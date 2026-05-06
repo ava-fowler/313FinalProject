@@ -31,10 +31,16 @@ export class AnimalService {
   // ----------------------
   // Get single animal by ID
   // ----------------------
-  getAnimalById(id: string): Observable<Animal> {
+  getAnimalById(id: string): Observable<Animal | null> {
     const animalDoc = doc(firebaseFirestore, `animals/${id}`);
     return from(getDoc(animalDoc)).pipe(
-      map(d => ({ id: d.id, ...(d.data() || {}) } as Animal))
+      map((d) => {
+        if (!d.exists()) {
+          console.log('No animal found for id:', id); // helps confirm the problem
+          return null;
+        }
+        return { id: d.id, ...d.data() } as Animal;
+      }),
     );
   }
 
