@@ -3,6 +3,11 @@
   <p class="text-muted" *ngIf="animalName">For: <strong>{{ animalName }}</strong></p>
 
   <div class="form-group mb-3">
+    <label>Name</label>
+    <input type="text" class="form-control" [(ngModel)]="name" name="name" required />
+  </div>
+
+  <div class="form-group mb-3">
     <label>Date</label>
     <input type="date" class="form-control" [(ngModel)]="date" name="date" required />
   </div>
@@ -11,10 +16,12 @@
     <label>Time</label>
     <input type="time" class="form-control" [(ngModel)]="time" name="time"
            [min]="officeHours.open" [max]="officeHours.close" required />
-    <small class="text-muted">Office hours: {{ officeHours.open }} - {{ officeHours.close }}</small>
+    <small class="text-muted">
+      Office hours: {{ officeHoursDisplay.open }} - {{ officeHoursDisplay.close }}
+    </small>
   </div>
 
-  <button class="btn btn-primary" (click)="book()" [disabled]="!date || !time">
+  <button class="btn btn-primary" (click)="book()" [disabled]="!name.trim() || !date || !time">
     Confirm Appointment
   </button>
 </div>
