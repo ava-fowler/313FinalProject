@@ -2,9 +2,12 @@ export interface Animal {
   id?: string;
   name: string;
   breed: string;
-  age: number;
   sex: string;
-  personality: string;
-  shelterDuration: string;
-  imageUrl: string;
+  species?: string;
+  age?: string | number;
+  status?: string;
+  about?: string;
+  imageUrl?: string;
+  shelterDuration?: string; // <-- ADD THIS
+  personality?: string; // <-- ADD THIS
 }
