@@ -8,26 +8,34 @@ import { RouterModule } from '@angular/router';
   selector: 'app-register',
   standalone: true,
   imports: [FormsModule, RouterModule],
-  templateUrl: './register.html'
+  templateUrl: './register.html',
 })
 export class RegisterComponent {
   email = '';
   password = '';
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+  ) {}
 
   async onSubmit() {
     try {
       await this.auth.registerUser(this.email, this.password);
-      alert("Registered and logged in");
-      this.router.navigate(['/customer']);
+      alert('Registered and logged in');
+
+      // Check role after registration
+      if (this.auth.isAdmin()) {
+        this.router.navigate(['/admin']);
+      } else {
+        this.router.navigate(['/customer']);
+      }
     } catch (err: any) {
       alert(err.message);
     }
   }
 
-goToLogin() {
-  this.router.navigate(['/login']);
-}
-
+  goToLogin() {
+    this.router.navigate(['/login']);
+  }
 }
