@@ -2,7 +2,7 @@ import { firebaseFirestore } from './firebase';
 import { collection, addDoc } from 'firebase/firestore';
 
 const animals = [
-  { name: 'Bella', breed: 'Golden Retriever', age: 3, sex: 'Female', personality: 'Friendly and energetic, loves people and other dogs.', shelterDuration: '2 months', imageUrl: 'https://placedog.net/500/400?id=3' },
+{ name: 'Bella', breed: 'Golden Retriever', age: 3, sex: 'Female', personality: 'Friendly and energetic, loves people and other dogs.', shelterDuration: '2 months', imageUrl: 'https://placedog.net/500/400?id=3' },
 { name: 'Milo', breed: 'Tabby Cat', age: 2, sex: 'Male', personality: 'Calm, affectionate, and loves naps in sunny spots.', shelterDuration: '3 weeks', imageUrl: 'https://placedog.net/500/400?id=3' },
 { name: 'Luna', breed: 'Husky', age: 4, sex: 'Female', personality: 'Playful and talkative, enjoys long walks and cold weather.', shelterDuration: '1 month', imageUrl: 'https://placedog.net/500/400?id=3' },
 { name: 'Oliver', breed: 'Beagle', age: 1, sex: 'Male', personality: 'Curious and adventurous, great with families.', shelterDuration: '2 weeks', imageUrl: 'https://placedog.net/500/400?id=3' },
