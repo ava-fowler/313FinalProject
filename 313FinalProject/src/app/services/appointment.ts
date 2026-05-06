@@ -5,10 +5,10 @@ import {
   serverTimestamp,
   doc,
   updateDoc,
+  deleteDoc,
   onSnapshot,
   query,
   orderBy,
-  where,
 } from 'firebase/firestore';
 import { firebaseFirestore } from '../firebase';
 import { AuthService } from './auth';
@@ -16,8 +16,8 @@ import { Observable, BehaviorSubject } from 'rxjs';
 
 export interface Appointment {
   id?: string;
-  animalId: string | number;
-  animalName?: string;
+  animalId: string; // Changed to string to match Firestore IDs
+  animalName: string; // NEW: Store the animal's name
   customerEmail: string;
   customerName?: string;
   date: string;
@@ -36,7 +36,6 @@ export class AppointmentService {
   appointments$ = this.appointmentsSubject.asObservable();
 
   constructor(private auth: AuthService) {
-    // Real-time listener for all appointments
     const q = query(this.appointmentsCollection, orderBy('createdAt', 'desc'));
     onSnapshot(q, (snapshot) => {
       const appointments = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }) as Appointment);
@@ -44,13 +43,21 @@ export class AppointmentService {
     });
   }
 
-  // Your teammate's original method - KEEP THIS
-  async createAppointment(animalId: number, date: string, time: string) {
+  // UPDATED: Accept animalId as string and add animalName
+  async createAppointment(
+    animalId: string,
+    animalName: string,
+    customerName: string,
+    date: string,
+    time: string,
+  ) {
     const user = this.auth.getCurrentUser();
     if (!user) throw new Error('User must be logged in to book an appointment');
 
     return addDoc(this.appointmentsCollection, {
-      animalId,
+      animalId, // Now saved as string (no NaN)
+      animalName, // NEW: Saves the animal's name
+      customerName,
       customerEmail: user.email,
       date,
       time,
@@ -59,7 +66,6 @@ export class AppointmentService {
     });
   }
 
-  // NEW: For the book-appointment component with more fields
   async bookAppointment(appointment: Omit<Appointment, 'id'>): Promise<void> {
     await addDoc(this.appointmentsCollection, {
       ...appointment,
@@ -68,14 +74,17 @@ export class AppointmentService {
     });
   }
 
-  // NEW: Get all appointments (real-time via constructor)
   getAppointments(): Observable<Appointment[]> {
     return this.appointments$;
   }
 
-  // NEW: Update status (approve/reject)
   async updateStatus(id: string, status: 'approved' | 'rejected'): Promise<void> {
     const appDoc = doc(firebaseFirestore, `appointments/${id}`);
     await updateDoc(appDoc, { status });
+  }
+
+  async deleteAppointment(id: string): Promise<void> {
+    const appDoc = doc(firebaseFirestore, `appointments/${id}`);
+    await deleteDoc(appDoc);
   }
 }
