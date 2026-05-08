@@ -24,7 +24,13 @@ export class RegisterComponent {
     try {
       await this.auth.registerUser(this.email, this.user, this.password);
       alert('Registered and logged in');
-      this.router.navigate(['/customer']);
+
+      // Check role after registration
+      if (this.auth.isAdmin()) {
+        this.router.navigate(['/admin']);
+      } else {
+        this.router.navigate(['/customer']);
+      }
     } catch (err: any) {
       alert(err.message);
     }

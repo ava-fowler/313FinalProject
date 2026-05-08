@@ -5,6 +5,8 @@ import { AuthService } from '../../services/auth';
 import { AppointmentService, Appointment } from '../../services/appointment';
 import { AnimalService } from '../../services/animal';
 import { Animal } from '../../models/animal';
+import { FavoritesService } from '../../services/favorites';
+import { ɵHttpInterceptingHandler } from '@angular/common/http';
 
 @Component({
   selector: 'app-customer-profile',
@@ -23,10 +25,18 @@ export class CustomerProfileComponent implements OnInit {
   showChangeUsername = false;
   showChangePassword = false;
   showPassword = false;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 94372186d2b0188285772ebf48aad26c5ee4dd9e
   appointments: Appointment[] = [];
   favoriteAnimals: Animal[] = [];
   loadingAppointments = false;
   loadingFavorites = false;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 94372186d2b0188285772ebf48aad26c5ee4dd9e
   successMessage = '';
   errorMessage = '';
   isUpdatingUsername = false;
@@ -36,7 +46,11 @@ export class CustomerProfileComponent implements OnInit {
     private auth: AuthService,
     private appointmentService: AppointmentService,
     private animalService: AnimalService,
+<<<<<<< HEAD
     private cdr: ChangeDetectorRef,
+=======
+    private favoriteService: FavoritesService,
+>>>>>>> 94372186d2b0188285772ebf48aad26c5ee4dd9e
   ) {}
 
   ngOnInit() {
@@ -53,7 +67,7 @@ export class CustomerProfileComponent implements OnInit {
       this.currentPassword = user.password || '';
     }
   }
-
+  // Appointments
   loadAppointments() {
     if (!this.userEmail) return;
     this.loadingAppointments = true;
@@ -64,17 +78,68 @@ export class CustomerProfileComponent implements OnInit {
           return new Date(b.date).getTime() - new Date(a.date).getTime();
         });
         this.loadingAppointments = false;
+<<<<<<< HEAD
         this.cdr.detectChanges();
+=======
+>>>>>>> 94372186d2b0188285772ebf48aad26c5ee4dd9e
       })
       .catch((err) => {
         console.error('Failed to load appointments:', err);
         this.loadingAppointments = false;
+<<<<<<< HEAD
         this.cdr.detectChanges();
+=======
+>>>>>>> 94372186d2b0188285772ebf48aad26c5ee4dd9e
       });
   }
 
-  loadFavoriteAnimals() {
+  async cancelAppointment(appointmentId?: string) {
+    if (!appointmentId) return;
+    if (!confirm('Cancel this appointment?')) return;
+    try {
+      await this.appointmentService.cancelAppointment(appointmentId);
+      this.loadAppointments();
+      this.successMessage = 'Appointment cancelled';
+      setTimeout(() => (this.successMessage = ''), 3000);
+    } catch (err: any) {
+      console.error('Failed to cancel appointment:', err);
+      this.errorMessage = err?.message || 'Failed to cancel appointment';
+      setTimeout(() => (this.errorMessage = ''), 4000);
+    }
+  }
+
+  // Favorites
+  // loadFavoriteAnimals() {
+  //   this.loadingFavorites = true;
+  //   const favorites = this.getFavorites();
+  //   this.animalService.getAnimals().subscribe(
+  //     (animals) => {
+  //       this.favoriteAnimals = animals.filter((a) => favorites.includes(a.id || ''));
+  //       this.loadingFavorites = false;
+  //     },
+  //     (err) => {
+  //       console.error('Failed to load favorite animals:', err);
+  //       this.loadingFavorites = false;
+  //     },
+  //   );
+  // }
+
+  // toggleFavorite(animalId: string | undefined) {
+  //   if (!animalId) return;
+  //   const favorites = this.getFavorites();
+  //   const index = favorites.indexOf(animalId);
+  //   if (index > -1) {
+  //     favorites.splice(index, 1);
+  //   } else {
+  //     favorites.push(animalId);
+  //   }
+  //   localStorage.setItem('favorites', JSON.stringify(favorites));
+  //   this.loadFavoriteAnimals();
+  // }
+
+  async loadFavoriteAnimals() {
     this.loadingFavorites = true;
+<<<<<<< HEAD
     const favorites = this.getFavorites();
     this.animalService.getAnimals().subscribe({
       next: (animals) => {
@@ -88,8 +153,71 @@ export class CustomerProfileComponent implements OnInit {
         this.cdr.detectChanges();
       },
     });
+=======
+    try {
+      const favoriteIds = await this.favoriteService.getFavoriteIds();
+      this.animalService.getAnimals().subscribe((animals) => {
+        this.favoriteAnimals = animals.filter((a) => favoriteIds.includes(a.id || ''));
+        this.loadingFavorites = false;
+      });
+    } catch (err) {
+      console.error('Failed to load favorites:', err);
+      this.loadingFavorites = false;
+    }
+    
+    // this.loadingFavorites = true;
+    // this.favoriteService
+    //   .getFavoriteIds()
+    //   .then((favoriteIds) => {
+    //     this.animalService.getAnimals().subscribe((animals) => {
+    //       this.favoriteAnimals = animals.filter((a) => favoriteIds.includes(a.id || ''));
+    //       this.loadingFavorites = false;
+    //     });
+    //   })
+    //   .catch((err) => {
+    //     console.error('Failed to load favorites:', err);
+    //     this.loadingFavorites = false;
+    //   });
+>>>>>>> 94372186d2b0188285772ebf48aad26c5ee4dd9e
   }
 
+  async toggleFavorite(animalId: string | undefined) {
+    if (!animalId) return;
+    const isFav = this.isFavorite(animalId);
+    const animal = this.favoriteAnimals.find((a) => a.id === animalId);
+    try {
+      if (isFav) {
+        await this.favoriteService.removeFavorite(animalId);
+      } else {
+        await this.favoriteService.addFavorite(animalId, animal?.name || '');
+      }
+      await this.loadFavoriteAnimals();
+    } catch (err: any) {
+      this.errorMessage = err?.message || 'Failed to update favorites';
+      setTimeout(() => (this.errorMessage = ''), 4000);
+    }
+    
+    // if (!animalId) return;
+    // const isFav = this.favoriteAnimals.some((a) => a.id === animalId);
+    // if (isFav) {
+    //   await this.favoriteService.removeFavorite(animalId);
+    // } else {
+    //   await this.favoriteService.addFavorite(animalId, animalName);
+    // }
+    // this.loadFavoriteAnimals();
+  }
+
+  isFavorite(animalId: string | undefined): boolean {
+    if (!animalId) return false;
+    return this.favoriteAnimals.some((a) => a.id === animalId);
+    // return this.getFavorites().includes(animalId);
+  }
+  getFavorites(): string[] {
+    const favorites = localStorage.getItem('favorites');
+    return favorites ? JSON.parse(favorites) : [];
+  }
+
+  // User things
   async updateUsername() {
     if (!this.newUsername) {
       this.errorMessage = 'Username cannot be empty';
@@ -144,6 +272,7 @@ export class CustomerProfileComponent implements OnInit {
     }
   }
 
+<<<<<<< HEAD
   async cancelAppointment(appointmentId?: string) {
     if (!appointmentId) return;
     if (!confirm('Cancel this appointment?')) return;
@@ -159,35 +288,14 @@ export class CustomerProfileComponent implements OnInit {
     }
   }
 
+=======
+>>>>>>> 94372186d2b0188285772ebf48aad26c5ee4dd9e
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
   }
 
   getPasswordDisplay(): string {
     return this.showPassword ? this.currentPassword : '••••••••';
-  }
-
-  toggleFavorite(animalId: string | undefined) {
-    if (!animalId) return;
-    const favorites = this.getFavorites();
-    const index = favorites.indexOf(animalId);
-    if (index > -1) {
-      favorites.splice(index, 1);
-    } else {
-      favorites.push(animalId);
-    }
-    localStorage.setItem('favorites', JSON.stringify(favorites));
-    this.loadFavoriteAnimals();
-  }
-
-  getFavorites(): string[] {
-    const favorites = localStorage.getItem('favorites');
-    return favorites ? JSON.parse(favorites) : [];
-  }
-
-  isFavorite(animalId: string | undefined): boolean {
-    if (!animalId) return false;
-    return this.getFavorites().includes(animalId);
   }
 
   cancelChangeUsername() {
