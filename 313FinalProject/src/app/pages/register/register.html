@@ -17,6 +17,19 @@
       </div>
 
       <div class="mb-3">
+        <label for="email" class="form-label">Username</label>
+        <input
+          type="username"
+          id="username"
+          name="username"
+          class="form-control"
+          [(ngModel)]="user"
+          placeholder="Username"
+          required
+        />
+      </div>
+
+      <div class="mb-3">
         <label for="password" class="form-label">Password</label>
         <input
           type="password"

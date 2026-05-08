@@ -40,10 +40,18 @@
       </select>
     </div>
 
+    <!-- NEW: Shelter Duration -->
     <div class="form-group mb-3">
-      <label for="about">About this animal</label>
-      <textarea id="about" name="about" class="form-control" rows="4"
-                [(ngModel)]="newAnimal.about" placeholder="Personality, health notes, etc."></textarea>
+      <label for="shelterDuration">At shelter for</label>
+      <input type="text" id="shelterDuration" name="shelterDuration" class="form-control"
+             [(ngModel)]="newAnimal.shelterDuration" placeholder="e.g. 2 months" />
+    </div>
+
+    <!-- FIXED: Changed from 'about' to 'personality' to match detail page -->
+    <div class="form-group mb-3">
+      <label for="personality">Personality</label>
+      <textarea id="personality" name="personality" class="form-control" rows="4"
+                [(ngModel)]="newAnimal.personality" placeholder="Kind, loving, energetic, etc."></textarea>
     </div>
 
     <div class="form-group mb-3">

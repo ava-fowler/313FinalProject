@@ -10,11 +10,10 @@ import {
   query,
   orderBy,
 } from 'firebase/firestore';
-import { firebaseFirestore } from '../firebase';
-import { firebaseStorage } from '../firebase'; // <-- ADD THIS
+import { firebaseFirestore, firebaseStorage } from '../firebase';
 import { Observable, from, map, BehaviorSubject } from 'rxjs';
 import { Animal } from '../models/animal';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // <-- ADD THIS
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 @Injectable({
   providedIn: 'root',
@@ -36,9 +35,17 @@ export class AnimalService {
     return this.animals$;
   }
 
-  getAnimalById(id: string): Observable<Animal> {
+  getAnimalById(id: string): Observable<Animal | null> {
     const animalDoc = doc(firebaseFirestore, `animals/${id}`);
-    return from(getDoc(animalDoc)).pipe(map((d) => ({ id: d.id, ...d.data() }) as Animal));
+    return from(getDoc(animalDoc)).pipe(
+      map((d) => {
+        if (!d.exists()) {
+          console.log('No animal found for id:', id);
+          return null;
+        }
+        return { id: d.id, ...(d.data() || {}) } as Animal;
+      }),
+    );
   }
 
   addAnimal(animal: Animal): Promise<void> {
@@ -58,7 +65,6 @@ export class AnimalService {
     return deleteDoc(animalDoc);
   }
 
-  // ADD THIS METHOD
   async uploadImage(file: File): Promise<string> {
     const storageRef = ref(firebaseStorage, `animal-images/${Date.now()}_${file.name}`);
     await uploadBytes(storageRef, file);

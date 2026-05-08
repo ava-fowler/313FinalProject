@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
 })
 export class RegisterComponent {
   email = '';
+  user = '';
   password = '';
 
   constructor(
@@ -21,15 +22,9 @@ export class RegisterComponent {
 
   async onSubmit() {
     try {
-      await this.auth.registerUser(this.email, this.password);
+      await this.auth.registerUser(this.email, this.user, this.password);
       alert('Registered and logged in');
-
-      // Check role after registration
-      if (this.auth.isAdmin()) {
-        this.router.navigate(['/admin']);
-      } else {
-        this.router.navigate(['/customer']);
-      }
+      this.router.navigate(['/customer']);
     } catch (err: any) {
       alert(err.message);
     }

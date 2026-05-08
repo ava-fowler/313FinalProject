@@ -1,12 +1,12 @@
 <div class="container mt-4">
-  <h1 class="mb-4">My Schedule</h1>
+  <h1 class="mb-4">Admin Dashboard</h1>
 
   <!-- APPOINTMENTS SECTION -->
   <h3 class="mt-4 mb-3">Appointments</h3>
-
-  <!-- Main container for appointments -->
   <div *ngIf="appointments$ | async as appointments; else loadingAppts">
-    <div *ngIf="appointments.length === 0" class="alert alert-info">No appointments yet.</div>
+    <div *ngIf="appointments.length === 0" class="alert alert-info">
+      No appointments yet.
+    </div>
 
     <div class="table-responsive mb-5" *ngIf="appointments.length > 0">
       <table class="table table-bordered table-hover">
@@ -27,37 +27,27 @@
             <td>{{ appt.date }}</td>
             <td>{{ appt.time }}</td>
             <td>
-              <span
-                class="badge"
-                [ngClass]="{
-                  'bg-warning text-dark': appt.status === 'pending',
-                  'bg-success': appt.status === 'approved',
-                  'bg-danger': appt.status === 'rejected',
-                }"
-                >{{ appt.status }}</span
-              >
+              <span class="badge" [ngClass]="{
+                'bg-warning text-dark': appt.status === 'pending',
+                'bg-success': appt.status === 'approved',
+                'bg-danger': appt.status === 'rejected'
+              }">{{ appt.status }}</span>
             </td>
             <td>
-              <button
-                class="btn btn-success btn-sm me-1"
-                (click)="approveAppointment(appt.id)"
-                [disabled]="appt.status === 'approved'"
-              >
+              <button class="btn btn-success btn-sm me-1" 
+                      (click)="approveAppointment(appt.id)"
+                      [disabled]="appt.status === 'approved'">
                 Approve
               </button>
-              <button
-                class="btn btn-danger btn-sm me-1"
-                (click)="rejectAppointment(appt.id)"
-                [disabled]="appt.status === 'rejected'"
-              >
+              <button class="btn btn-danger btn-sm me-1" 
+                      (click)="rejectAppointment(appt.id)"
+                      [disabled]="appt.status === 'rejected'">
                 Reject
               </button>
-              <button
-                class="btn btn-outline-secondary btn-sm"
-                (click)="deleteAppointment(appt.id)"
-                title="Delete appointment"
-              >
-                <i class="bi bi-trash"></i>
+              <button class="btn btn-outline-secondary btn-sm" 
+                      (click)="deleteAppointment(appt.id)"
+                      title="Delete appointment">
+                🗑️
               </button>
             </td>
           </tr>
@@ -66,7 +56,6 @@
     </div>
   </div>
 
-  <!-- loadingAppts MUST be a sibling, not inside the *ngIf above -->
   <ng-template #loadingAppts>
     <p>Loading appointments...</p>
   </ng-template>
@@ -76,13 +65,11 @@
   <div class="row">
     <!-- CREATE NEW PROFILE CARD -->
     <div class="col-md-4 col-lg-3 mb-4">
-      <div
-        class="card h-100 shadow-sm d-flex align-items-center justify-content-center"
-        style="min-height: 300px; cursor: pointer; border: 2px dashed #adb5bd; background: #f8f9fa"
-        [routerLink]="['/admin/create-animal']"
-      >
+      <div class="card h-100 shadow-sm d-flex align-items-center justify-content-center"
+           style="min-height: 300px; cursor: pointer; border: 2px dashed #adb5bd; background: #f8f9fa;"
+           [routerLink]="['/admin/create-animal']">
         <div class="text-center text-muted">
-          <h1 style="font-size: 4rem; line-height: 1">+</h1>
+          <h1 style="font-size: 4rem; line-height: 1;">+</h1>
           <h5 class="mt-2">Create New Profile</h5>
         </div>
       </div>
@@ -91,38 +78,25 @@
     <!-- ANIMAL CARDS -->
     <div class="col-md-4 col-lg-3 mb-4" *ngFor="let animal of animals$ | async">
       <div class="card h-100 shadow-sm">
-        <img
-          class="card-img-top"
-          [src]="animal.imageUrl || 'https://via.placeholder.com/300x200?text=No+Image'"
-          [alt]="animal.name"
-          style="height: 200px; object-fit: cover"
-        />
+        <img class="card-img-top" [src]="animal.imageUrl || 'https://via.placeholder.com/300x200?text=No+Image'" 
+             [alt]="animal.name" style="height: 200px; object-fit: cover;">
         <div class="card-body">
           <h5 class="card-title fw-bold">{{ animal.name }}</h5>
           <p class="card-text text-muted mb-1">{{ animal.breed }}</p>
-          <p class="card-text text-muted small">
-            {{ animal.sex }} · {{ animal.species || 'Unknown' }}
-          </p>
-          <span
-            class="badge"
-            [class.bg-success]="animal.status === 'Available'"
-            [class.bg-warning]="animal.status === 'Pending'"
-            [class.bg-secondary]="animal.status === 'Adopted'"
-          >
+          <p class="card-text text-muted small">{{ animal.sex }} · {{ animal.species || 'Unknown' }}</p>
+          <span class="badge" 
+                [class.bg-success]="animal.status === 'Available'"
+                [class.bg-warning]="animal.status === 'Pending'"
+                [class.bg-secondary]="animal.status === 'Adopted'">
             {{ animal.status || 'Available' }}
           </span>
         </div>
         <div class="card-footer bg-white border-top-0">
           <div class="d-flex gap-2">
-            <button
-              class="btn btn-warning btn-sm flex-fill"
-              [routerLink]="['/admin/edit-animal', animal.id]"
-            >
-              Edit
-            </button>
-            <button class="btn btn-danger btn-sm flex-fill" (click)="deleteAnimal(animal.id)">
-              Delete
-            </button>
+            <button class="btn btn-warning btn-sm flex-fill" 
+                    [routerLink]="['/admin/edit-animal', animal.id]">Edit</button>
+            <button class="btn btn-danger btn-sm flex-fill" 
+                    (click)="deleteAnimal(animal.id)">Delete</button>
           </div>
         </div>
       </div>

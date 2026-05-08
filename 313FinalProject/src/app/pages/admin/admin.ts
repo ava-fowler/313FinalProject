@@ -53,7 +53,6 @@ export class AdminComponent implements OnInit {
     }
   }
 
-  // NEW: Delete appointment with confirmation
   async deleteAppointment(id: string | undefined) {
     if (!id) return;
     if (confirm('Are you sure you want to delete this appointment?')) {

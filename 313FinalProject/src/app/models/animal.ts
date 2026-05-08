@@ -4,10 +4,10 @@ export interface Animal {
   breed: string;
   sex: string;
   species?: string;
-  age?: string | number;
-  status?: string;
-  about?: string;
-  imageUrl?: string;
-  shelterDuration?: string; // <-- ADD THIS
+  age?: string;
   personality?: string; // <-- ADD THIS
+  shelterDuration?: string; // <-- ADD THIS
+  status?: string;
+  imageUrl?: string;
+  createdAt?: any;
 }

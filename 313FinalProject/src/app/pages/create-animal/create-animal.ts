@@ -19,7 +19,8 @@ export class CreateAnimalComponent implements OnInit {
     sex: '',
     species: '',
     age: '',
-    about: '',
+    personality: '', // Changed from 'about'
+    shelterDuration: '', // NEW
     status: 'Available',
     imageUrl: '',
   };
@@ -38,7 +39,9 @@ export class CreateAnimalComponent implements OnInit {
     if (this.animalId) {
       this.isEditMode = true;
       this.animalService.getAnimalById(this.animalId).subscribe((animal) => {
-        this.newAnimal = { ...animal };
+        if (animal) {
+          this.newAnimal = { ...animal };
+        }
       });
     }
   }
