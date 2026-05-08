@@ -1,5 +1,58 @@
+<!-- Filter Bar -->
+<div class="container mt-3 mb-3">
+  <!-- Search -->
+  <div class="mb-2">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Search by name or breed..."
+      [(ngModel)]="searchQuery"
+      (ngModelChange)="applyFilters()"
+    />
+  </div>
+
+  <!-- Dropdowns -->
+  <div class="row g-2">
+    <div class="col-md-4">
+      <select class="form-select" [(ngModel)]="selectedSex" (ngModelChange)="applyFilters()">
+        <option value="">All Sexes</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+    </div>
+
+    <div class="col-md-4">
+      <select class="form-select" [(ngModel)]="selectedAge" (ngModelChange)="applyFilters()">
+        <option value="">All Ages</option>
+        <option value="young">Puppy / Kitten (0–2 yrs)</option>
+        <option value="adult">Adult (3–7 yrs)</option>
+        <option value="senior">Senior (8+ yrs)</option>
+      </select>
+    </div>
+
+    <div class="col-md-4">
+      <select class="form-select" [(ngModel)]="selectedDuration" (ngModelChange)="applyFilters()">
+        <option value="">All Durations</option>
+        <option value="recent">Recent (days/weeks)</option>
+        <option value="medium">Medium (1–3 months)</option>
+        <option value="long">Long Stay (4+ months)</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Reset -->
+  <div class="mt-2">
+    <button class="btn btn-outline-secondary btn-sm" (click)="resetFilters()">Reset Filters</button>
+  </div>
+</div>
+
+<!-- Animal Grid -->
 <section class="results">
-  @for (animal of animals; track $index) {
+  @for (animal of filteredAnimals; track $index) {
     <app-animal-profile [animal]="animal" (selected)="openAnimal($event)"> </app-animal-profile>
+  }
+
+  @if (filteredAnimals.length === 0) {
+    <p class="text-muted mt-3 ms-3">No animals found matching your filters.</p>
   }
 </section>

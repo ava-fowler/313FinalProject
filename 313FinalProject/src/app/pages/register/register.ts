@@ -22,8 +22,7 @@ export class RegisterComponent {
 
   async onSubmit() {
     try {
-<<<<<<< HEAD
-      await this.auth.registerUser(this.email, this.password);
+      await this.auth.registerUser(this.email, this.user, this.password);
       alert('Registered and logged in');
 
       // Check role after registration
@@ -32,11 +31,6 @@ export class RegisterComponent {
       } else {
         this.router.navigate(['/customer']);
       }
-=======
-      await this.auth.registerUser(this.email, this.user, this.password);
-      alert("Registered and logged in");
-      this.router.navigate(['/customer']);
->>>>>>> 0bd574417f3d2ffe8c9decdb04b067f4df74f4dc
     } catch (err: any) {
       alert(err.message);
     }
