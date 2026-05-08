@@ -121,8 +121,8 @@ h2.m-3 {
     }
 }
 .contact-section {
-    margin: 2rem auto;
-    padding: 2rem;
+    /* margin: 2rem auto; */
+    /* padding: 2rem; */
     background: #f9f9f9;
     max-width: 600px;
     border-radius: 8px;
